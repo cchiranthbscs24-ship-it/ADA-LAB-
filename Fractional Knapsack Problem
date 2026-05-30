@@ -1,0 +1,96 @@
+#include<stdio.h>
+
+float w[50], p[50], ratio[50], x[50];
+
+void knapsack(int m, int n)
+{
+    int rem_cap;
+    float totalProfit = 0.0;
+
+    for(int i = 0; i < n; i++)
+    {
+        x[i] = 0.0;
+    }
+
+    rem_cap = m;
+
+    for(int i = 0; i < n; i++)
+    {
+        if(w[i] <= rem_cap)
+        {
+            x[i] = 1.0;
+
+            rem_cap = rem_cap - w[i];
+
+            totalProfit = totalProfit + p[i];
+        }
+
+        else
+        {
+            x[i] = (float)rem_cap / w[i];
+
+            totalProfit =
+            totalProfit + (x[i] * p[i]);
+
+            break;
+        }
+    }
+
+    printf("\nSelected fractions:\n");
+
+    for(int i = 0; i < n; i++)
+    {
+        printf("%.2f ", x[i]);
+    }
+
+    printf("\n");
+
+    printf("Maximum Profit = %.2f\n", totalProfit);
+}
+
+int main()
+{
+    int n, m, i, j;
+
+    printf("Enter number of items: ");
+    scanf("%d", &n);
+
+    printf("Enter weight and profit of each item:\n");
+
+    for(i = 0; i < n; i++)
+    {
+        scanf("%f %f", &w[i], &p[i]);
+
+        ratio[i] = p[i] / w[i];
+    }
+
+    printf("Enter Maximum Capacity: ");
+    scanf("%d", &m);
+
+    for(i = 0; i < n - 1; i++)
+    {
+        for(j = i + 1; j < n; j++)
+        {
+            if(ratio[i] < ratio[j])
+            {
+                float temp;
+
+                temp = ratio[i];
+                ratio[i] = ratio[j];
+                ratio[j] = temp;
+
+                temp = w[i];
+                w[i] = w[j];
+                w[j] = temp;
+
+                temp = p[i];
+                p[i] = p[j];
+                p[j] = temp;
+            }
+        }
+    }
+
+    knapsack(m, n);
+
+    return 0;
+}
