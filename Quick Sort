@@ -1,0 +1,70 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<time.h>
+
+void swap(int *a, int *b)
+{
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+int partition(int a[], int low, int high)
+{
+    int pivot = a[low];
+    int i = low+1;
+    int j = high;
+
+    while(1)
+    {
+        while(i<=high && a[i]<=pivot)
+            i++;
+        while(a[j]>pivot)
+            j--;
+        if(i<j)
+            swap(&a[i], &a[j]);
+        else
+            break;
+    }
+
+    swap(&a[low], &a[j]);
+    return j;
+}
+
+void quicksort(int a[], int low, int high) {
+    if (low < high) {
+        int p = partition(a, low, high);
+        quicksort(a, low, p - 1);
+        quicksort(a, p + 1, high);
+    }
+}
+
+int main()
+{
+    int n, i;
+    clock_t start, end;
+    double cpu_time;
+
+    printf("Enter the number of elements: ");
+    scanf("%d", &n);
+
+    int a[n];
+
+    printf("Enter elements:\n");
+    for(i = 0; i < n; i++)
+        scanf("%d", &a[i]);
+
+    start = clock();
+    quicksort(a, 0, n - 1);
+    end = clock();
+
+    cpu_time = ((double)(end - start)) / CLOCKS_PER_SEC;
+
+    printf("Sorted elements:\n");
+    for(i = 0; i < n; i++)
+        printf("%d ", a[i]);
+
+    printf("\nTime taken = %f seconds\n", cpu_time);
+
+    return 0;
+}
