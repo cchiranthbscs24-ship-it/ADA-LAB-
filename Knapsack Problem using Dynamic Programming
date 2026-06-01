@@ -1,0 +1,66 @@
+#include <stdio.h>
+
+struct Item
+{
+    int weight;
+    int profit;
+};
+
+int max(int a, int b)
+{
+    if(a > b)
+        return a;
+    else
+        return b;
+}
+
+int main()
+{
+    int n, capacity;
+
+    printf("Enter number of items: ");
+    scanf("%d", &n);
+
+    struct Item item[n];
+
+    for(int i = 0; i < n; i++)
+    {
+        printf("Enter weight and profit of item %d: ", i + 1);
+        scanf("%d %d", &item[i].weight, &item[i].profit);
+    }
+
+    printf("Enter knapsack capacity: ");
+    scanf("%d", &capacity);
+
+    int dp[n + 1][capacity + 1];
+
+    for(int i = 0; i <= n; i++)
+    {
+        for(int w = 0; w <= capacity; w++)
+        {
+            if(i == 0 || w == 0)
+            {
+                dp[i][w] = 0;
+            }
+
+            else if(item[i - 1].weight <= w)
+            {
+                dp[i][w] = max(
+                    item[i - 1].profit +
+                    dp[i - 1][w - item[i - 1].weight],
+
+                    dp[i - 1][w]
+                );
+            }
+
+            else
+            {
+                dp[i][w] = dp[i - 1][w];
+            }
+        }
+    }
+
+    printf("Maximum Profit = %d\n", dp[n][capacity]);
+
+    return 0;
+}
