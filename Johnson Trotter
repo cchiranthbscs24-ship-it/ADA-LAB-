@@ -1,0 +1,55 @@
+#include <stdio.h>
+
+void swap(int *a, int *b)
+{
+    int temp;
+
+    temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void permute(int a[], int start, int end)
+{
+    int i;
+
+    if(start == end)
+    {
+        for(i = 0; i <= end; i++)
+        {
+            printf("%d ", a[i]);
+        }
+        printf("\n");
+    }
+    else
+    {
+        for(i = start; i <= end; i++)
+        {
+            swap(&a[start], &a[i]);
+
+            permute(a, start + 1, end);
+
+            swap(&a[start], &a[i]);
+        }
+    }
+}
+
+int main()
+{
+    int n, i;
+    int a[10];
+
+    printf("Enter n: ");
+    scanf("%d", &n);
+
+    for(i = 0; i < n; i++)
+    {
+        a[i] = i + 1;
+    }
+
+    printf("All permutations are:\n");
+
+    permute(a, 0, n - 1);
+
+    return 0;
+}
