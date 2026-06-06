@@ -1,0 +1,72 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+bool canFinish(int numCourses, int** prerequisites, int prerequisitesSize, int* prerequisitesColSize) {
+    int* T = (int*)malloc(numCourses * sizeof(int));
+    int t_index = 0;
+    int* visited = (int*)calloc(numCourses, sizeof(int));
+    int* in_degree = (int*)calloc(numCourses, sizeof(int));
+
+    for (int i = 0; i < prerequisitesSize; i++) {
+        int target = prerequisites[i][0];
+        in_degree[target]++;
+    }
+
+    int* Queue = (int*)malloc(numCourses * sizeof(int));
+    int head = 0, tail = 0;
+
+    for (int i = 0; i < numCourses; i++) {
+        if (in_degree[i] == 0) {
+            Queue[tail++] = i; 
+            visited[i] = 1;    
+        }
+    }
+
+    while (head < tail) {
+        int vertex = Queue[head++]; 
+        T[t_index++] = vertex;      
+
+        for (int i = 0; i < prerequisitesSize; i++) {
+            if (prerequisites[i][1] == vertex) {
+                int j = prerequisites[i][0];
+                if (visited[j] == 0) { 
+                    in_degree[j]--;
+                    if (in_degree[j] == 0) {
+                        Queue[tail++] = j; 
+                        visited[j] = 1;    
+                    }
+                }
+            }
+        }
+    }
+    bool result = (t_index == numCourses);
+    return result;
+}
+
+int main() {
+    int numCourses = 2;
+    int prerequisitesSize = 2;
+    int prerequisitesColSize[] = {2, 2};
+
+    int** prerequisites = (int**)malloc(prerequisitesSize * sizeof(int*));
+    for (int i = 0; i < prerequisitesSize; i++) {
+        prerequisites[i] = (int*)malloc(2 * sizeof(int));
+    }
+
+    prerequisites[0][0] = 1;
+    prerequisites[0][1] = 0;
+    prerequisites[1][0] = 0;
+    prerequisites[1][1] = 1;
+
+    bool result = canFinish(numCourses, prerequisites, prerequisitesSize, prerequisitesColSize);
+    
+    printf("%s\n", result ? "true" : "false");
+
+    for (int i = 0; i < prerequisitesSize; i++) {
+        free(prerequisites[i]);
+    }
+    free(prerequisites);
+
+    return 0;
+}
